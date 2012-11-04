@@ -46,7 +46,7 @@ class Elm_Plugin {
 
 	public function emailErrors() {
 		if ( $this->settings->get('send_errors_to_email') == '' ) {
-			trigger_error('Can\'t send errors to email - no email address is specified', E_USER_WARNING);
+			//Can't send errors to email if no email address is specified.
 			return;
 		}
 
