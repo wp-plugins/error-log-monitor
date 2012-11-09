@@ -30,7 +30,7 @@ Email notifications are disabled by default. To enable them, click the "Configur
 
 == Installation ==
 
-Follow these steps to install the plugin on your site:
+Follow these steps to install the plugin on your site: 
 
 1. Download the .zip file to your computer.
 2. Go to *Plugins -> Add New* and select the "Upload" option.
