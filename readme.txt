@@ -3,7 +3,7 @@ Contributors: whiteshadow
 Tags: dashboard widget, administration, error reporting, admin, maintenance, php
 Requires at least: 3.4
 Tested up to: 4.0-beta4
-Stable tag: 1.2.1
+Stable tag: 1.2.2
 
 Adds a Dashboard widget that displays the latest messages from your PHP error log. It can also send logged errors to email.
 
