@@ -13,8 +13,8 @@ class scbCron {
 	/**
 	 * Create a new cron job
 	 *
-	 * @param string Reference to main plugin file
-	 * @param array List of args:
+	 * @param string|bool $file Reference to main plugin file
+	 * @param array $args List of args:
 	 		string $action OR callback $callback
 			string $schedule OR number $interval
 			array $callback_args (optional)
