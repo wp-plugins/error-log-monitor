@@ -16,6 +16,7 @@ class Elm_DashboardWidget {
 		$this->settings = $settings;
 		$this->plugin = $plugin;
 		add_action('wp_dashboard_setup', array($this, 'registerWidget'));
+		add_action('admin_init', array($this, 'handleLogClearing'));
 	}
 
 	public function registerWidget() {
@@ -37,10 +38,7 @@ class Elm_DashboardWidget {
 			return;
 		}
 
-		$doClearLog =  isset($_GET['elm-action']) && ($_GET['elm-action'] = 'clear-log')
-					&& check_admin_referer('clear-log') && current_user_can($this->requiredCapability);
-		if ( $doClearLog ) {
-			$log->clear();
+		if ( isset($_GET['elm-log-cleared']) && !empty($_GET['elm-log-cleared']) ) {
 			echo '<p><strong>Log cleared.</strong></p>';
 		}
 
@@ -75,7 +73,7 @@ class Elm_DashboardWidget {
 			);
 			printf(
 				'<a href="%s" class="button" onclick="return confirm(\'%s\');">%s</a>',
-				wp_nonce_url(admin_url('/index.php?elm-action=clear-log'), 'clear-log'),
+				wp_nonce_url(admin_url('/index.php?elm-action=clear-log&noheader=1'), 'clear-log'),
 				'Are you sure you want to clear the error log?',
 				'Clear Log'
 			);
@@ -174,6 +172,22 @@ class Elm_DashboardWidget {
 			);
 		}
 		echo '</select></label></p>';
+	}
+
+	public function handleLogClearing() {
+		$doClearLog =  isset($_GET['elm-action']) && ($_GET['elm-action'] === 'clear-log')
+			&& check_admin_referer('clear-log') && current_user_can($this->requiredCapability);
+
+		if ( $doClearLog ) {
+			$log = Elm_PhpErrorLog::autodetect();
+			if ( is_wp_error($log) ) {
+				return;
+			}
+
+			$log->clear();
+			wp_redirect(admin_url('index.php?elm-log-cleared=1'));
+			exit();
+		}
 	}
 
 	/**
