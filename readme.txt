@@ -46,6 +46,10 @@ Follow these steps to install the plugin on your site:
 
 == Changelog ==
 
+= 1.2.3 =
+* Tested up to WP 4.2-alpha.
+* Refreshing the page after clearing the log will no longer make the plugin to clear the log again.
+
 = 1.2.2 = 
 * Updated Scb Framework to the latest revision.
 * Tested up to WordPress 4.0 beta.
