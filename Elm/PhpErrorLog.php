@@ -38,13 +38,23 @@ class Elm_PhpErrorLog {
 				)
 			);
 		} else if ( !is_readable($logFile) ) {
-			return new WP_Error(
-				'error_log_not_found',
-				sprintf (
-					'The log file <code>%s</code> does not exist or is inaccessible.',
-					esc_html($logFile)
-				)
-			);
+			if ( file_exists($logFile) ) {
+				return new WP_Error(
+					'error_log_not_accessible',
+					sprintf (
+						'The log file <code>%s</code> exists, but is not accessible. Please check file permissions.',
+						esc_html($logFile)
+					)
+				);
+			} else {
+				return new WP_Error(
+					'error_log_not_found',
+					sprintf (
+						'The log file <code>%s</code> does not exist or is inaccessible.',
+						esc_html($logFile)
+					)
+				);
+			}
 		}
 
 		return new self($logFile);
