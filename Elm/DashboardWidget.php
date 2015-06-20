@@ -51,7 +51,9 @@ class Elm_DashboardWidget {
 			if ($this->settings->get('sort_order') === 'reverse-chronological') {
 				$lines = array_reverse($lines);
 			}
-			echo '<table class="widefat"><tbody>';
+			echo '<table class="widefat" style="table-layout: fixed; overflow: hidden; box-sizing: border-box;">',
+			     '<colgroup><col style="width: 9em;"><col></colgroup>',
+			     '<tbody>';
 			$isOddRow = false;
 			foreach ($lines as $line) {
 				$isOddRow = !$isOddRow;
