@@ -48,6 +48,9 @@ class Elm_DashboardWidget {
 		} else if ( empty($lines) ) {
 			echo '<p>The log file is empty.</p>';
 		} else {
+			if ($this->settings->get('sort_order') === 'reverse-chronological') {
+				$lines = array_reverse($lines);
+			}
 			echo '<table class="widefat"><tbody>';
 			$isOddRow = false;
 			foreach ($lines as $line) {
@@ -123,6 +126,11 @@ class Elm_DashboardWidget {
 				$this->settings->set('email_interval', $this->settings->get_defaults('email_interval'));
 			}
 
+			$this->settings->set('sort_order', strval($formInputs['sort_order']));
+			if ( !in_array($this->settings->get('sort_order'), array('chronological', 'reverse-chronological')) ) {
+				$this->settings->set('sort_order', $this->settings->get_defaults('sort_order'));
+			}
+
 			do_action('elm_settings_changed', $this->settings);
 		}
 
@@ -138,6 +146,13 @@ class Elm_DashboardWidget {
 			esc_attr($this->widgetId),
 			$this->settings->get('strip_wordpress_path') ? ' checked="checked"' : '',
 			'Strip WordPress root directory from log messages'
+		);
+
+		printf(
+			'<p><label><input type="checkbox" name="%s[sort_order]" value="reverse-chronological" %s> %s</label></p>',
+			esc_attr($this->widgetId),
+			$this->settings->get('sort_order') === 'reverse-chronological' ? ' checked="checked"' : '',
+			'Reverse line order (most recent on top)'
 		);
 
 		printf(

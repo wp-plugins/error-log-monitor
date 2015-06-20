@@ -18,6 +18,7 @@ class Elm_Plugin {
 				'email_interval' => 3600, //seconds
 				'email_last_line_timestamp' => 0,
 				'timestamp_format' => 'M d, H:i:s',
+				'sort_order' => 'chronological',
 			)
 		);
 
@@ -73,11 +74,17 @@ class Elm_Plugin {
 		//Only include messages logged since the previous email.
 		$logEntries = array();
 		$foundNewMessages = false;
+
 		$lastEmailTimestamp = $this->settings->get('email_last_line_timestamp');
+		$lastEntryTimestamp = time(); //Fall-back value in case none of the new entries have a timestamp.
+
 		foreach($lines as $line) {
 			$foundNewMessages = $foundNewMessages || ($line['timestamp'] > $lastEmailTimestamp);
 			if ( $foundNewMessages ) {
 				$logEntries[] = $line;
+			}
+			if ( !empty($line['timestamp']) ) {
+				$lastEntryTimestamp = $line['timestamp'];
 			}
 		}
 
@@ -93,15 +100,17 @@ class Elm_Plugin {
 				$log->getFilename()
 			);
 
+			if ($this->settings->get('sort_order') === 'reverse-chronological') {
+				$logEntries = array_reverse($logEntries);
+			}
+
 			$stripWordPressPath = $this->settings->get('strip_wordpress_path');
-			$lastEntryTimestamp = time();//Fall-back value in case none of the new entries have a timestamp.
 			foreach($logEntries as $logEntry) {
 				if ( $stripWordPressPath ) {
 					$logEntry['message'] = $this->stripWpPath($logEntry['message']);
 				}
 				if ( !empty($logEntry['timestamp']) ) {
 					$body .= '[' . $this->formatTimestamp($logEntry['timestamp']). '] ';
-					$lastEntryTimestamp = $logEntry['timestamp'];
 				}
 				$body .= $logEntry['message'] . "\n";
 			}
